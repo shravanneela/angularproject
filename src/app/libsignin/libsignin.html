@@ -1,0 +1,84 @@
+<div class="auth-page">
+  <h1 class="heading">
+    <span class="focus">Learn to </span>
+    <span class="today">Lead</span>
+  </h1>
+ 
+  <div class="container auth-container">
+    <div class="auth-header">
+      <h2 class="auth-title">Let's Explore</h2>
+      <p class="auth-subtitle">Sign in to continue your journey</p>
+    </div>
+ 
+    <form class="auth-form" [formGroup]="registrationForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <div class="input-row">
+          <input
+            type="email"
+            id="email"
+            class="form-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            formControlName="email"
+          />
+        </div>
+        <div *ngIf="submitted && registrationForm.controls.email.errors">
+          <small style="color: red;" *ngIf="registrationForm.controls.email.errors['required']">
+            Email is required
+          </small>
+          <small style="color: red;" *ngIf="registrationForm.controls.email.errors['email']">
+            Enter a valid email
+          </small>
+        </div>
+      </div>
+      
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-row password-row">
+          <input
+            type="password"
+            id="password"
+            class="form-input"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+            formControlName="password"
+          />
+          <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="submitted && registrationForm.controls.password.errors">
+          <small style="color: red;" *ngIf="registrationForm.controls.password.errors['required']">
+            Password is required
+          </small>
+          <small style="color: red;" *ngIf="registrationForm.controls.password.errors['minlength']">
+            Password must be at least 6 characters long
+          </small>
+      </div>
+      <div class="form-row-inline">
+        <label class="remember-label">
+          <input type="checkbox" class="remember-checkbox" />
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+ 
+      <p class="auth-message" aria-live="polite"></p>
+ 
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+ 
+    <p class="auth-footer">
+      Don't have an account?
+      <a routerLink="/signup" class="auth-link">Sign Up</a>
+    </p>
+  </div>
+</div>

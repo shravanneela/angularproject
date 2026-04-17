@@ -1,0 +1,42 @@
+<div class="homepage">
+  <div class="navbar">
+    <div class="navbar-brand">Focus on Today</div>
+    <button (click)="logout()" class="logout-btn">Logout</button>
+  </div>
+
+  <div class="container">
+    <div class="welcome-section">
+      <div class="profile-card">
+        <p class="welcome-text">Welcome back, Student!</p>
+        <p class="session-text">Your study session continues here</p>
+      </div>
+      <div class="user-location">
+        <p>{{currentTime}}</p>
+        <p>{{currentLocation}}</p>
+      </div>
+    </div>
+
+    <div class="goals-section">
+      <div class="container-heading">
+        <span>Today's Goals</span>
+      </div>
+      <div class="goal-row">
+        <input type="text" [(ngModel)]="newGoal" placeholder="Add a new goal" class="goal-input" />
+        <button (click)="addGoal()" class="add-goal-btn">+</button>
+      </div>
+
+      <div *ngFor="let goal of goals" class="goal-row">
+        <input type="checkbox" class="goal-checkbox" [(ngModel)]="goal.completed" />
+        <span [class.completed]="goal.completed" class="goal-text">{{ goal.text }}</span>
+        <button (click)="deleteGoal(goal.id)" class="delete-btn">✕</button>
+      </div>
+    </div>
+
+    <!-- <div class="progress-section">
+      <p class="progress-text">Today's Progress: 33%</p>
+      <div class="progress-bar">
+        <div class="progress-value"></div>
+      </div>
+    </div> -->
+  </div>
+</div>

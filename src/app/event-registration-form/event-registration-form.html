@@ -1,0 +1,160 @@
+<div class="profile-form-container">
+    <div class="profile-card">
+        <form class="profile-card-form"  [formGroup]="registrationForm" (ngSubmit)="onSubmit()"    >
+            <h3>Event Registration Form</h3>
+            <section class="form-section personal-info-section">
+                <h4>attendee details</h4>
+                <div class="form-fields-container">
+                    <div class="form-field-item">
+                        <label for="attendeeName" class="field-label">
+                            attendee name
+                            <span class="required">*</span>
+                        </label>
+                        <input id="attendeeName" type="text" class="form-input" formControlName="attendeename">
+                            placeholder="enter your attendee name" />
+                    </div>
+                    <div class="form-field-item">
+                        <label for="age" class="field-label">
+                            age
+                            <span class="required">*</span >
+                        </label>
+                        <input id="age" type="number" class="form-input" placeholder="enter your age" formControlName="age"/>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="gender" class="field-label">
+                            gender
+                            <span class="required">*</span>
+                        </label>
+                        <select id="gender" class="form-input" formControlName="gender">
+                            <option value="">select your gender</option>
+                            <option value="male">male</option>
+                            <option value="female">female</option>
+                            <option value="other">other</option>
+                        </select>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="organization" class="field-label">
+                            organization
+                            <span class="required">*</span>
+                        </label>
+                        <input id="organization" type="text" class="form-input" placeholder="enter your organization" formControlName="organization"/>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="designation" class="field-label">
+                            designation
+                            <span class="required">*</span>
+                        </label>
+                        <input id="designation" type="text" class="form-input" placeholder="enter your designation" formControlName="designation"/>
+                    </div>
+                </div>
+            </section>
+            <section class="form-section registration-info-section">
+                <h4>Event preferences</h4>
+                <div class="form-fields-container">
+                    <div class="form-field-item">
+                        <label for="email" class="field-label">
+                            email
+                            <span class="required">*</span>
+                        </label>
+                        <input id="email" type="email" class="form-input" placeholder="enter your mail id" formControlName="email"/>
+                    </div>
+
+                    <div class="form-field-item">
+                        <label for="phoneNumber" class="field-label">
+                            phone number
+                            <span class="required">*</span>
+                        </label>
+                        <input id="phoneNumber" type="text" class="form-input" placeholder="enter your phone number" formControlName="phonenumber"/>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="ticketType" class="field-label">
+                            ticket type
+
+                            <span class="required">*</span></label>
+                        <select id="ticketType" class="form-input">
+                            <option value="standard">standard</option>
+                            <option value="premium">premium</option>
+                            <option value="vip">vip</option>
+                        </select>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="mealPreference" class="field-label">
+                            meal preference
+                            <span class="required">*</span>
+                        </label>
+                        <select id="mealPreference" class="form-input">
+                            <option value="">select your meal preference</option>
+                            <option value="vegetarian">vegetarian</option>
+                            <option value="nonVegetarian">non-vegetarian</option>
+                            <option value="vegan">vegan</option>
+                        </select>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="emergencyContact" class="field-label">
+                            emergency contact
+                            <span class="required">*</span>
+                        </label>
+                        <input id="emergencyContact" type="text" class="form-input"
+                            placeholder="enter emergency contact information" formControlName="emergencycontact"     />
+                    </div>
+                </div>
+            </section>
+            <section class="form-section additional-info-section">
+                <h4>Travel & Location</h4>
+                <div class="form-fields-container">
+                    <div class="form-field-item">
+                        <label for="venueCity" class="field-label">
+                            venue city
+                            <span class="required">*</span>
+                        </label>
+                        <input id="venueCity" type="text" class="form-input"
+                            placeholder="enter the city where the event will be held" formControlName="venuecity"   />
+                    </div>
+                    <div class="form-field-item">
+                        <label for="traveling From" class="field-label">
+                            traveling from
+                            <span class="required">*</span>
+                        </label>
+                        <input id="travelingFrom" type="text" class="form-input"
+                            placeholder="enter the city you will be traveling from" formControlName="travellingfrom" />
+                    </div>
+                    <div class="form-field-item">
+                        <label for="Accommodation Required" class="field-label">
+                            accommodation required
+                            <span class="required">*</span>
+                        </label>
+                        <select id="Accommodation Required" class="form-input">
+                            <option value="yes">yes</option>
+                            <option value="no">no</option>
+                        </select>
+                    </div>
+                    <div class="form-field-item">
+                        <label for="Zip Code" class="field-label">
+                            zip code
+                            <span class="required">*</span>
+                        </label>
+                        <input id="zipCode" type="text" class="form-input" placeholder="enter your zip code" formControlName="zipcode"  />
+                    </div>
+                </div>
+            </section>
+            <section class="form-section skills-section">
+                <h4>Session Interests</h4>
+                <div class="form-fields-container">
+                    <div class="form-field-item">
+                        <label for="skillInput" class="field-label">Add interest</label>
+                        <div class="skill-input-container">
+                            <input id="interestInput" type="text" class="form-input"
+                                placeholder="Enter a session interest and press Add" 
+                                #interestInput/>
+                            <button type="button" (click)="addInterest(interestInput.value)" class="add-skill-button">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="form-actions">
+                <button type="submit" (click)="onSubmit()" class="submit-button">Submit</button>
+                <button type="reset"  class="submit-button">Reset</button>
+            </div>
+        </form>
+    </div>
+</div>    
