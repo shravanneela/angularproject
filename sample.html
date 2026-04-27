@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Library System</title>
+
+    <style>
+        body { font-family: Arial; background:#eef2f7; text-align:center; }
+        h1 { background:#222; color:white; padding:15px; }
+
+        .box {
+            background:white; padding:15px; margin:15px auto;
+            width:340px; border-radius:12px;
+            box-shadow:0 0 12px rgba(0,0,0,0.2);
+        }
+
+        input, button, select { margin:6px; padding:8px; width:90%; }
+        button { background:#007bff; color:white; border:none; cursor:pointer; }
+        button:hover { background:#0056b3; }
+
+        ul { text-align:left; padding:0; }
+        li { list-style:none; padding:5px; border-bottom:1px solid #ddd; }
+
+        .available { color:green; }
+        .issued { color:red; }
+
+        #welcome { font-weight:bold; margin-top:10px; }
+    </style>
+</head>
+
+<body>
+
+<h1>📚 Smart Library System</h1>
+
+<div id="auth">
+
+    <div class="box">
+        <h3>Register</h3>
+        <input id="rname" placeholder="Name">
+        <input id="remail" placeholder="Email">
+        <input id="rpass" type="password" placeholder="Password">
+        <button onclick="register()">Register</button>
+    </div>
+
+    <div class="box">
+        <h3>Login</h3>
+        <input id="lemail" placeholder="Email">
+        <input id="lpass" type="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+</div>
+
+<div id="dashboard" style="display:none">
+
+    <div id="welcome"></div>
+    <button onclick="logout()" style="background:red;">Logout</button>
+
+    <div class="box">
+        <h3>📂 Categories</h3>
+        <input id="category" placeholder="Add Category">
+        <button onclick="addCategory()">Add</button>
+        <ul id="catList"></ul>
+    </div>
+
+    <div class="box">
+        <h3>📚 Books</h3>
+        <input id="title" placeholder="Title">
+        <input id="author" placeholder="Author">
+        <select id="catSelect"></select>
+        <button onclick="addBook()">Add Book</button>
+        <ul id="bookList"></ul>
+    </div>
+
+    <div class="box">
+        <h3>📖 Issue Book</h3>
+        <select id="bookSelect"></select>
+        <button onclick="issueBook()">Issue</button>
+    </div>
+
+    <div class="box">
+        <h3>📦 Issued Books</h3>
+        <ul id="issueList"></ul>
+    </div>
+
+</div>
+
+<script>
+
+let currentUser = null;
+
+// ================= AUTH =================
+
+function register() {
+    fetch("http://localhost:3000/register", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            name:rname.value,
+            email:remail.value,
+            pass:rpass.value
+        })
+    })
+    .then(res=>res.text())
+    .then(msg=>alert(msg));
+}
+
+function login() {
+    fetch("http://localhost:3000/login", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            email:lemail.value,
+            pass:lpass.value
+        })
+    })
+    .then(res=>{
+        if(!res.ok) throw "Invalid login";
+        return res.json();
+    })
+    .then(user=>{
+        currentUser = user;
+        auth.style.display="none";
+        dashboard.style.display="block";
+        welcome.innerText="Welcome "+user.name;
+
+        loadCategories();
+        loadBooks();
+        loadIssues();
+    })
+    .catch(err=>alert(err));
+}
+
+function logout() {
+    currentUser = null;
+    dashboard.style.display="none";
+    auth.style.display="block";
+}
+
+// ================= CATEGORY =================
+
+function loadCategories() {
+    fetch("http://localhost:3000/category")
+    .then(res=>res.json())
+    .then(data=>{
+        catList.innerHTML="";
+        catSelect.innerHTML="";
+
+        data.forEach(c=>{
+            catList.innerHTML+=`<li>${c.name}</li>`;
+            catSelect.innerHTML+=`<option>${c.name}</option>`;
+        });
+    });
+}
+
+function addCategory() {
+    fetch("http://localhost:3000/category", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ name:category.value })
+    })
+    .then(()=>loadCategories());
+}
+
+// ================= BOOKS =================
+
+function loadBooks() {
+    fetch("http://localhost:3000/books")
+    .then(res=>res.json())
+    .then(data=>{
+        bookList.innerHTML="";
+        bookSelect.innerHTML="";
+
+        data.forEach(b=>{
+            bookList.innerHTML+=`
+            <li>${b.title} - 
+            <span class="${b.available?'available':'issued'}">
+            ${b.available?'Available':'Issued'}
+            </span></li>`;
+
+            if(b.available){
+                bookSelect.innerHTML+=`<option value="${b._id}">${b.title}</option>`;
+            }
+        });
+    });
+}
+
+function addBook() {
+    fetch("http://localhost:3000/books", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            title:title.value,
+            author:author.value,
+            category:catSelect.value
+        })
+    })
+    .then(()=>loadBooks());
+}
+
+// ================= ISSUE =================
+
+function issueBook() {
+    fetch("http://localhost:3000/issue", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+            bookId:bookSelect.value,
+            user:currentUser.name
+        })
+    })
+    .then(res=>res.text())
+    .then(msg=>{
+        alert(msg);
+        loadBooks();
+        loadIssues();
+    });
+}
+
+function loadIssues() {
+    fetch("http://localhost:3000/issue")
+    .then(res=>res.json())
+    .then(data=>{
+        issueList.innerHTML="";
+
+        data.forEach(iss=>{
+            issueList.innerHTML+=`
+            <li>${iss.book} → ${iss.user}
+            <button onclick="returnBook('${iss._id}')">Return</button>
+            </li>`;
+        });
+    });
+}
+
+function returnBook(id) {
+    fetch("http://localhost:3000/return/"+id, {
+        method:"POST"
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        alert("Returned! Fine ₹"+data.fine);
+        loadBooks();
+        loadIssues();
+    });
+}
+
+</script>
+
+</body>
+</html>
